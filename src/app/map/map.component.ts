@@ -26,8 +26,8 @@ export class MapComponent implements OnInit, OnDestroy {
 
   options: google.maps.MapOptions = {
     mapTypeId: 'hybrid',
-    zoomControl: false,
-    scrollwheel: false,
+    zoomControl: true,
+    scrollwheel: true,
     disableDoubleClickZoom: true,
     maxZoom: 200,
     minZoom: 8,
@@ -62,14 +62,10 @@ export class MapComponent implements OnInit, OnDestroy {
       this.subscrption.unsubscribe();
   }
 
-  zoomIn() {
-    if (this.options.maxZoom != null && this.zoom < this.options.maxZoom)
-      this.zoom++;
-  }
-
-  zoomOut() {
-    if (this.options.minZoom && this.zoom > this.options.minZoom)
-      this.zoom--;
+  getDetails(marker: MarkerModel): void {
+    this._positionService.setDetail(null);
+    this._positionService.setIsReady(false);
+    this._positionService.setDetail(marker);
   }
 
   private getLocation(): void {
@@ -98,34 +94,47 @@ export class MapComponent implements OnInit, OnDestroy {
         )
         .pipe(
           map((data: Root) => data.results)
-        ).subscribe((data: Result[]) => {
-          console.log(data)
-          if (data.length > 0)
-            this.markers = data.map((x, i) => {
-              return {
-                title: x.name,
-                label: {
-                  color: 'black',
-                  text: x.name
-                },
-                options: {
-                  animation: google.maps.Animation.BOUNCE,
-                },
-                position: {
-                  lat: x.geocodes.main.latitude,
-                  lng: x.geocodes.main.longitude
-                }
-              };
-            });
-          else
+        ).subscribe(
+          (data: Result[]) => {
+            console.log(data)
+            if (data.length > 0)
+              this.markers = data.map((x, i) => {
+                return {
+                  id: x.fsq_id,
+                  title: x.name,
+                  label: {
+                    color: 'white',
+                    text: x.name
+                  },
+                  options: {
+                    animation: google.maps.Animation.BOUNCE,
+                    opacity: 0.9,
+                  },
+                  position: {
+                    lat: x.geocodes.main.latitude,
+                    lng: x.geocodes.main.longitude
+                  }
+                };
+              });
+            else
+              Swal.fire({
+                title: 'Advertencia!',
+                text: "No se han encontrado ubicaciones cercanas",
+                icon: 'warning',
+                confirmButtonText: 'Aceptar'
+              });
+          },
+          (error) => {
             Swal.fire({
-              title: 'Advertencia!',
-              text: "No se han encontrado ubicaciones cercanas",
-              icon: 'warning',
+              title: 'Error!',
+              text: "Ocurrio un error",
+              icon: 'error',
               confirmButtonText: 'Aceptar'
             });
-          console.log(this.markers);
-        });
+          },
+          () => {
+            this._positionService.setIsReady(true);
+          });
 
     } else {
       alert("Geolocation is not supported by this browser.");

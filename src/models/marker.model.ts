@@ -1,4 +1,5 @@
 export interface MarkerModel {
+    id:string;
     position: {
         lat: number;
         lng: number;
@@ -9,6 +10,7 @@ export interface MarkerModel {
     };
     title: string;
     options: {
+        opacity: number;
         animation: any
     };
 }
