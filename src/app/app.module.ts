@@ -9,6 +9,7 @@ import { MapComponent } from './map/map.component';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DetailMarkerComponent } from './detail-marker/detail-marker.component';
+import { NgxStarRatingModule } from 'ngx-star-rating';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { DetailMarkerComponent } from './detail-marker/detail-marker.component';
     NgxSpinnerModule,
     FormsModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgxStarRatingModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

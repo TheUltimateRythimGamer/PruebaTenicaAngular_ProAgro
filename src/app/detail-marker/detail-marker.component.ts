@@ -20,6 +20,7 @@ export class DetailMarkerComponent implements OnInit, OnDestroy {
     TxtDireccion: ['', [Validators.required]],
     TxtCiudad: ['', [Validators.required]],
     TxtEstado: ['', [Validators.required]],
+    rating: ['', Validators.required],
   });
 
   get TxtNombre() { return this.formDetalle.get('TxtNombre') }
