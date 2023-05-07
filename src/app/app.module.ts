@@ -10,12 +10,17 @@ import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DetailMarkerComponent } from './detail-marker/detail-marker.component';
 import { NgxStarRatingModule } from 'ngx-star-rating';
+import { PricipalComponent } from './pricipal/pricipal.component';
+import { AppRoutingModule } from './app-routing.module';
+import { ListComponent } from './list/list.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MapComponent,
-    DetailMarkerComponent
+    DetailMarkerComponent,
+    PricipalComponent,
+    ListComponent
   ],
   imports: [
     BrowserModule,
@@ -26,6 +31,7 @@ import { NgxStarRatingModule } from 'ngx-star-rating';
     HttpClientModule,
     ReactiveFormsModule,
     NgxStarRatingModule,
+    AppRoutingModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

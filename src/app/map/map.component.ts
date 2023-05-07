@@ -4,6 +4,7 @@ import { PositionService } from '../services/position.service';
 import { Result, Root } from 'src/models/place.model';
 import { MarkerModel } from 'src/models/marker.model';
 import Swal from 'sweetalert2';
+import { Location } from 'src/models/location.model';
 
 @Component({
   selector: 'app-map',
@@ -45,6 +46,7 @@ export class MapComponent implements OnInit, OnDestroy {
   };
 
   private subscrption: Subscription = new Subscription();
+  private subscrptionLocation: Subscription = new Subscription();
 
   constructor(
     private _positionService: PositionService
@@ -55,6 +57,17 @@ export class MapComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this._positionService.setIsReady(true);
     this.getLocation();
+    this.subscrptionLocation = this._positionService.location$.subscribe((position: Location) => {
+      if (Object.keys(position).length > 0) {
+        this.lat = position.latitude;
+        this.lng = position.longitude;
+        this.center = {
+          lat: position.latitude,
+          lng: position.longitude,
+        };
+        this.getMarkers();
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -94,36 +107,35 @@ export class MapComponent implements OnInit, OnDestroy {
         )
         .pipe(
           map((data: Root) => data.results)
-        ).subscribe(
-          (data: Result[]) => {
-            console.log(data)
-            if (data.length > 0)
-              this.markers = data.map((x, i) => {
-                return {
-                  id: x.fsq_id,
-                  title: x.name,
-                  label: {
-                    color: 'white',
-                    text: x.name
-                  },
-                  options: {
-                    animation: google.maps.Animation.BOUNCE,
-                    opacity: 0.9,
-                  },
-                  position: {
-                    lat: x.geocodes.main.latitude,
-                    lng: x.geocodes.main.longitude
-                  }
-                };
-              });
-            else
-              Swal.fire({
-                title: 'Advertencia!',
-                text: "No se han encontrado ubicaciones cercanas",
-                icon: 'warning',
-                confirmButtonText: 'Aceptar'
-              });
-          },
+        )
+        .subscribe((data: Result[]) => {
+          if (data.length > 0)
+            this.markers = data.map((x, i) => {
+              return {
+                id: x.fsq_id,
+                title: x.name,
+                label: {
+                  color: 'white',
+                  text: x.name
+                },
+                options: {
+                  animation: google.maps.Animation.BOUNCE,
+                  opacity: 0.9,
+                },
+                position: {
+                  lat: x.geocodes.main.latitude,
+                  lng: x.geocodes.main.longitude
+                }
+              };
+            });
+          else
+            Swal.fire({
+              title: 'Advertencia!',
+              text: "No se han encontrado ubicaciones cercanas",
+              icon: 'warning',
+              confirmButtonText: 'Aceptar'
+            });
+        },
           (error) => {
             Swal.fire({
               title: 'Error!',
@@ -139,6 +151,53 @@ export class MapComponent implements OnInit, OnDestroy {
     } else {
       alert("Geolocation is not supported by this browser.");
     }
+  }
+
+  private getMarkers(): void {
+    this._positionService.getInfoByOriginalLatLng(this.lat, this.lng, 10000)
+      .pipe(
+        map((data: Root) => data.results)
+      )
+      .subscribe((data: Result[]) => {
+        if (data.length > 0)
+          this.markers = data.map((x, i) => {
+            return {
+              id: x.fsq_id,
+              title: x.name,
+              label: {
+                color: 'white',
+                text: x.name
+              },
+              options: {
+                animation: google.maps.Animation.BOUNCE,
+                opacity: 0.9,
+              },
+              position: {
+                lat: x.geocodes.main.latitude,
+                lng: x.geocodes.main.longitude
+              }
+            };
+          });
+        else
+          Swal.fire({
+            title: 'Advertencia!',
+            text: "No se han encontrado ubicaciones cercanas",
+            icon: 'warning',
+            confirmButtonText: 'Aceptar'
+          });
+      },
+        (error) => {
+          Swal.fire({
+            title: 'Error!',
+            text: "Ocurrio un error",
+            icon: 'error',
+            confirmButtonText: 'Aceptar'
+          });
+        },
+        () => {
+          this._positionService.setIsReady(true);
+        });
+
   }
 
 }

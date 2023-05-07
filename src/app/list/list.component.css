@@ -1,0 +1,15 @@
+.general {
+    padding-left: 40px;
+    padding-right: 40px;
+    padding-top: 30px;
+}
+
+table {
+    border-collapse: collapse;
+    overflow: hidden;
+}
+
+th,
+td {
+    padding: 1em;
+}

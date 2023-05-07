@@ -1,0 +1,28 @@
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff" type="timer" [fullScreen]="true">
+    <p style="color: white">Cargando...</p>
+</ngx-spinner>
+<div class="general">
+
+    <table class="table table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Imagen</th>
+                <th>Ranking</th>
+            </tr>
+        </thead>
+        <tbody *ngFor="let item of data">
+            <tr>
+                <td width="10%">{{item.id}}</td>
+                <td width="10%">{{item.nombre}}</td>
+                <td width="40%">
+                    <img [src]="item.rutaImagen" style="width: 100%; height: 100%;">
+                </td>
+                <td width="40%">
+                    <ngx-star-rating [(ngModel)]="item.raking"></ngx-star-rating>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

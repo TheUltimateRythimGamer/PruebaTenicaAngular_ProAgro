@@ -1,33 +1,3 @@
-<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff" type="timer" [fullScreen]="true">
-    <p style="color: white">Cargando...</p>
-</ngx-spinner>
-<div class="general">
-    <div class="form-group row mb-3">
-        <div class="col-lg-8">
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <span class="input-group-text" id="inputGroup-sizing-default">Buscar:</span>
-                </div>
-                <input type="text" class="form-control" aria-label="Sizing example input"
-                    aria-describedby="inputGroup-sizing-default" [(ngModel)]="search">
-            </div>
-        </div>
-        <div class="col-lg-4">
-            <!-- <button class="btn btn-primary btn-md" style="width: 40%; margin-right: 5%;"
-                (click)="Add(0)">Añadir</button>
-            <button class="btn btn-success btn-md" style="width: 40%; margin-right: 5%;"
-                (click)="Comprar()">Comprar</button> -->
-        </div>
-    </div>
-    <div class="form-group row mb-3">
-
-        <div class="col-lg-6">
-            <app-map></app-map>
-        </div>
-
-        <div class="col-lg-6">
-            <app-detail-marker *ngIf="showDetail"></app-detail-marker>
-        </div>
-
-    </div>
+<div class="container-fluid">
+    <router-outlet></router-outlet>
 </div>
